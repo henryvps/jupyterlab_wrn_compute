@@ -1,0 +1,41 @@
+{
+  "name": "jupyterlab_wrn_compute",
+  "version": "0.1.0",
+  "description": "Warren compute extension.",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/henryvps/jupyterlab_wrn_compute",
+  "bugs": {
+    "url": "https://github.com/henryvps/jupyterlab_wrn_compute/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "henryvps",
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/henryvps/jupyterlab_wrn_compute.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^0.16.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1",
+    "typescript": "~2.6.0"
+  },
+  "jupyterlab": {
+    "extension": true
+  }
+}
