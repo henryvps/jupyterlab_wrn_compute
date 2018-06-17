@@ -2,42 +2,59 @@ import { JupyterLab, JupyterLabPlugin } from '@jupyterlab/application';
 import { Toolbar, ToolbarButton } from '@jupyterlab/apputils';
 import { TabBar, PanelLayout, Widget } from '@phosphor/widgets';
 
-
 import '../style/index.css';
-
 
 const TOOLBAR_CLASS = 'wrn-Compute-toolbar';
 
-// namespace CommandIDs {
-//   export
-//   const open: string = 'vm-warren:create';
-// }
-
 class ComputeWidget extends Widget {
   /**
-   * Construct a new FaaS widget.
+   * Construct a new Compute widget.
    */
   constructor() {
       super();
-      // this.settings = ServerConnection.makeSettings();
 
       this.id = 'wrn-compute-jupyterlab';
       this.title.label = 'Compute';
       this.title.closable = true;
       this.addClass('jp-computeWidget');
-      this.node.innerHTML = '<div tabindex="1" class="p-Widget jp-DirListing jp-FileBrowser-listing jp-mod-selected"><div class="jp-DirListing-header"><div class="jp-DirListing-headerItem jp-id-name jp-mod-selected"><span class="jp-DirListing-headerItemText">Name</span><span class="jp-DirListing-headerItemIcon"></span></div><div class="jp-DirListing-headerItem jp-id-modified"><span class="jp-DirListing-headerItemText">Last Modified</span><span class="jp-DirListing-headerItemIcon"></span></div></div>'
 
+      // Dirty way of creating a detailed list for basic navigation.
+      this.node.innerHTML = '<div tabindex="1" class="p-Widget jp-DirListing jp-FileBrowser-listing jp-mod-selected"><div class="jp-DirListing-header"><div class="jp-DirListing-headerItem jp-id-name jp-mod-selected"><span class="jp-DirListing-headerItemText">Name</span><span class="jp-DirListing-headerItemIcon"></span></div><div class="jp-DirListing-headerItem jp-id-modified"><span class="jp-DirListing-headerItemText">Last Modified</span><span class="jp-DirListing-headerItemIcon"></span></div></div>';
+      // Begin object listing
+      let objectList = document.createElement('ul');
+      objectList.className = 'jp-DirListing-content';
 
       let url = 'https://app.pilw.io:8443/v1/user-resource/vm/list';
-
       getRequest(url).then(response => {
         let vms = JSON.parse(response);
         for (let vm of vms ) {
-          let vmnode = document.createElement('div');
-          vmnode.innerHTML = '<b>' + vm.name + '</b>';
-          this.node.appendChild(vmnode);
-          console.log(vm.name);
+          // Objects as list rows
+          let objListItem = document.createElement('li');
+          objListItem.className = 'jp-DirListing-item';
+
+          // col for object icon
+          let objListItemIcon = document.createElement('span');
+          objListItemIcon.className = 'jp-DirListing-itemIcon jp-MaterialIcon jp-OpenFolderIcon';
+
+          // col for object name
+          let objListItemName = document.createElement('span');
+          objListItemName.className = 'jp-DirListing-itemText ';
+          objListItemName.innerText = vm.name;
+
+          // col for object state
+          let objListItemState = document.createElement('span');
+          objListItemState.className = 'jp-DirListing-itemText';
+          objListItemState.innerText = vm.status;
+
+          objListItem.appendChild(objListItemIcon);
+          objListItem.appendChild(objListItemName);
+          objListItem.appendChild(objListItemState);
+
+          objectList.appendChild(objListItem);
         }
+
+        this.node.appendChild(objectList);
+
       })
       .catch(error => {
         console.log(error);
